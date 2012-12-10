@@ -3,7 +3,7 @@
 //**************************************************************//
 //***Creado por Eduardo Mazarrasa Ocón Diciembre 2012***********//
 //**************************************************************//
-//*********Optimizado para IE9, Chrome23, firefox15 ************//
+//*********Optimizado para IE 9, Chrome 23, firefox 15 ************//
 //**************************************************************//
 
 var http = getXMLHttpRequest();
@@ -19,7 +19,7 @@ function getXMLHttpRequest()
   {
     try
 		{
-			req = new ActiveXObject("Msxml2.XMLHttp");/*explorer antiguos*/
+			req = new ActiveXObject("Msxml2.XMLHttp");/*explorer muy antiguos*/
 		}
     catch(err2) 
 		{ 
@@ -44,14 +44,13 @@ function compruebaHoraServidor(){
 	http.open("GET",modurl,true);
 	http.onreadystatechange = recargaDatos;
 	http.send(null);
-	//document.getElementById('servidor').innerHTML = 'Conectando con servidor...<img width="15px" src="wait.gif">';
-	
-	//Extablece el valor en milisegundos en el que se actuliza la hora con la del servidor
+		
+	//****Extablece el intervalo en milisegundos en el que se conecta al servidor para actualizar la hora cliente-servidor.****//
 	setTimeout("compruebaHoraServidor()",60000)
 	}
 
-//variable global que adopta en prime momento los la hora del cliente//
-//y se actualiza con cada llamada a compruebaHoraServidor()//
+//variable global que adopta en primer momento la hora del cliente//
+//y se actualiza con cada llamada a la función compruebaHoraServidor()//
 var horaServer = new Date();
 
 function recargaDatos()
@@ -66,19 +65,19 @@ function recargaDatos()
 				//milisegundos desde 1970(Época Unix)
 				horaServer.setTime(Number(segundos)*1000);
 				//muestra la fecha de ultima sincronización con el servidor				
-				document.getElementById('servidor').innerHTML = "Última sincronización con el servidor: "+ horaServer;
+				document.getElementById('servidor').innerHTML = "<p>Última sincronización con el servidor: "+ horaServer + "</p>";
 				
 				}
 			else
 				{
 				//mensaje de error
-				document.getElementById('servidor').innerHTML = 'No se encuentra el servidor <img width="15px" src="wait.gif">';
+				document.getElementById('servidor').innerHTML = '<p>No se encuentra el servidor <img  src="img/error.jpg"></p>';
 				}
 			}
 		else
 			{
 				//waiting server
-			document.getElementById('servidor').innerHTML = 'Sincronizando con el servidor...<img width="15px" src="wait.gif">';
+			document.getElementById('servidor').innerHTML = '<p>Sincronizando con el servidor...<img src="img/wait.gif"></p>';
 			}
 		//setTimeout("compruebaHoraServidor()",10000)
 	}
@@ -93,21 +92,21 @@ function mueveReloj(){
 	var minutocliente = cliente.getMinutes();
 	var segundocliente = cliente.getSeconds();
 	//document.getElementById('relojcliente').innerText = "Hora Cliente: "+ imprimeHora(horacliente,minutocliente,segundocliente);
-	// para que funcione en firefox
-	document.getElementById('relojcliente').textContent = "Hora Cliente: "+ imprimeHora(horacliente,minutocliente,segundocliente);
-	
-	
-
+	document.getElementById('relojcliente').innerHTML = "<p>Hora Cliente: "+ imprimeHora(horacliente,minutocliente,segundocliente)+ "</p>";
+		
 	//mostrar la hora calculada apartir de los datos de la hora del servidor
 	var horaScliente = horaServer.getHours();
 	var minutoScliente = horaServer.getMinutes();
 	var segundoScliente = horaServer.getSeconds();
-	document.getElementById('relojservidorcliente').textContent = "Hora Servidor-Cliente: "+ imprimeHora(horaScliente,minutoScliente,segundoScliente);
+	//var milisegundo = horaServer.getMilliseconds();
+	document.getElementById('relojservidorcliente').innerHTML = "<p title='Partiendo del dato de la hora el servidor se continua el calculo en el cliente.'>Hora Servidor-Cliente: "+ imprimeHora(horaScliente,minutoScliente,segundoScliente)+ "</p>";
 	
 	//calcula el angulo de desplazamineto de cada aguja del reloj
+	//var posSeg = "rotate("+(90 +( milisegundo*100 * 6 ))+"deg)";
 	var posSeg = "rotate("+(90 +( segundoScliente * 6 ))+"deg)";
 	var posMin = "rotate("+(90 +( minutoScliente * 6 ))+"deg)";
 	var posHor = "rotate("+(90 +( horaScliente * 30 ))+"deg)";
+	
 	
 	//Rotar agujas para IE9, Firefox15 y Chrome23//
 	/*document.getElementById('segundos').style.transform = "rotate(0deg)";*/
@@ -124,7 +123,7 @@ function mueveReloj(){
 	document.getElementById('horero').style.webkitTransform = posHor;
 	
 	
-	/* Incrementa cada segundo en un segundo la hora del servidor */
+	/* Incrementa cada segundo en un segundo la hora del cliente-servidor */
 	horaServer.setTime(horaServer.getTime()+1000);
 	setTimeout("mueveReloj()",1000)
 	
